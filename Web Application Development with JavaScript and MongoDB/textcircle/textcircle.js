@@ -6,7 +6,6 @@ if (Meteor.isClient) {
     docid:function(){
       return Documents.findOne()._id;
     }
-
   })
 }
 
@@ -15,7 +14,6 @@ if (Meteor.isServer) {
     // code to run on server at startup
     if (!Documents.findOne()){ //no documents
       Documents.insert({title:"my new document"});
-
     }
   });
 }
