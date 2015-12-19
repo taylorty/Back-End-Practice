@@ -1,21 +1,38 @@
 this.Documents = new Mongo.Collection("documents");
 
 if (Meteor.isClient) {
-  // counter starts at 0
-  Template.editor.helpers({
-    docid:function(){
-      return Documents.findOne()._id;
-    }
+    // counter starts at 0
+    Template.editor.helpers({
+        docid: function() {
+            var doc = Documents.findOne();
+            if (doc) {
+                return doc._id;
+            } else {
+                return undefined
+            }
+        },
+        config: function() {
+            return function(editor) {
 
-  })
+                editor.setOption("lineNumbers", true);
+                editor.setOption("mode", "html");
+                editor.on("change", function(cm_editor, info) {
+                    //console.log(cm_editor.getValue());
+                    $("#viewer_iframe").contents().find("html").html(cm_editor.getValue());
+                });
+            }
+        },
+    })
 }
 
 if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
-    if (!Documents.findOne()){ //no documents
-      Documents.insert({title:"my new document"});
+    Meteor.startup(function() {
+        // code to run on server at startup
+        if (!Documents.findOne()) { //no documents
+            Documents.insert({
+                title: "my new document"
+            });
 
-    }
-  });
+        }
+    });
 }
