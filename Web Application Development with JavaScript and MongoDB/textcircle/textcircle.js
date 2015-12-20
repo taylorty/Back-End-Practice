@@ -1,19 +1,20 @@
 this.Documents = new Mongo.Collection("documents");
 
 if (Meteor.isClient) {
-    // counter starts at 0
+    // find the first document in the Documents colleciton and send back its id
     Template.editor.helpers({
         docid: function() {
             var doc = Documents.findOne();
             if (doc) {
                 return doc._id;
             } else {
-                return undefined
+                return undefined;
             }
         },
+        // template helper that configures the CodeMirror editor
+        // you might also want to experiment with the ACE editor
         config: function() {
             return function(editor) {
-
                 editor.setOption("lineNumbers", true);
                 editor.setOption("mode", "html");
                 editor.on("change", function(cm_editor, info) {
@@ -22,17 +23,16 @@ if (Meteor.isClient) {
                 });
             }
         },
-    })
+    });
 }
 
 if (Meteor.isServer) {
     Meteor.startup(function() {
-        // code to run on server at startup
-        if (!Documents.findOne()) { //no documents
+        // startup code that creates a document in case there isn't one yet. 
+        if (!Documents.findOne()) { // no documents
             Documents.insert({
                 title: "my new document"
             });
-
         }
     });
 }
