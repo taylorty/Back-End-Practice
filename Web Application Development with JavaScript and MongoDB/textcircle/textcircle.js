@@ -24,6 +24,17 @@ if (Meteor.isClient) {
             }
         },
     });
+    // Update the session current_date variable every 1000 ms
+    // Meteor.setInterval repeatedly call a function 
+    Session.set("current_date", new Date());
+    Meteor.setInterval(function() {
+        Session.set("current_date", new Date());
+    }, 1000);
+    Template.date_display.helpers({
+        "current_date": function() {
+            return Session.get("current_date");
+        }
+    });
 }
 
 if (Meteor.isServer) {
